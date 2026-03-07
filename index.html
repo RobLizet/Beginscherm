@@ -3,257 +3,181 @@
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=390, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- PWA fullscreen op iPhone -->
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Rob's Scherm">
+<meta name="theme-color" content="#000000">
+
 <title>Rob's Beginscherm</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
 
-body {
+:root {
+–safe-top: env(safe-area-inset-top, 0px);
+–safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+html, body {
+width: 100%; height: 100%;
+overflow: hidden;
 font-family: ‘Nunito’, sans-serif;
 background: #000;
-display: flex;
-justify-content: center;
-align-items: center;
-min-height: 100vh;
-overflow: hidden;
+color: white;
 }
 
-.phone-frame {
-width: 390px;
-height: 844px;
-border-radius: 50px;
-position: relative;
-overflow: hidden;
-box-shadow: 0 0 0 2px #1a1a1a, 0 0 0 4px #2a2a2a, 0 30px 80px rgba(0,0,0,0.95);
-flex-shrink: 0;
+.screen {
+position: fixed;
+inset: 0;
 background: #000;
+overflow-y: auto;
+overflow-x: hidden;
+-webkit-overflow-scrolling: touch;
+padding-top: calc(var(–safe-top) + 8px);
+padding-bottom: calc(var(–safe-bottom) + 100px);
+padding-left: 16px;
+padding-right: 16px;
 }
 
-/* Pure black bg with subtle grain */
-.bg {
-position: absolute; inset: 0;
-background: #000;
-}
-
-/* Very subtle vignette glow at edges */
-.vignette {
-position: absolute; inset: 0;
-background: radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.7) 100%);
-pointer-events: none; z-index: 2;
-}
-
-.stars { position: absolute; inset: 0; overflow: hidden; z-index: 1; }
+/* Stars */
+.stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
 .star {
-position: absolute; width: 2px; height: 2px; border-radius: 50%; background: white;
-animation: twinkle var(–d,3s) ease-in-out infinite; opacity: var(–op,0.5);
+position: absolute; border-radius: 50%; background: white;
+animation: twinkle var(–d,3s) ease-in-out infinite; opacity: var(–op,0.4);
 }
 @keyframes twinkle {
-0%,100% { opacity: var(–op,0.5); } 50% { opacity: 0.05; }
+0%,100% { opacity: var(–op,0.4); } 50% { opacity: 0.05; }
 }
 
-.notch {
-position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-width: 130px; height: 35px; background: #000;
-border-radius: 0 0 22px 22px; z-index: 100;
-}
+/* All content above stars */
+.content { position: relative; z-index: 1; }
 
-.statusbar {
-position: absolute; top: 0; left: 0; right: 0; height: 50px;
-display: flex; align-items: flex-end; justify-content: space-between;
-padding: 0 28px 8px; z-index: 99; color: white; font-size: 13px; font-weight: 600;
-}
-
-.status-time { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
-.status-icons { display: flex; gap: 6px; align-items: center; }
-.status-icons svg { width: 16px; height: 16px; fill: white; }
-
-/* Date */
-.date-widget {
-position: absolute; top: 58px; left: 50%;
-transform: translateX(-50%); text-align: center; color: white;
-z-index: 10; animation: fadeDown 0.8s ease both; white-space: nowrap;
+/* DATE */
+.date-block {
+text-align: center;
+padding: 10px 0 18px;
+animation: fadeDown 0.7s ease both;
 }
 .date-day {
-font-size: 72px; font-weight: 200; line-height: 1; letter-spacing: -4px;
-opacity: 0.95; text-shadow: 0 0 40px rgba(255,255,255,0.1);
+font-size: 88px; font-weight: 200; line-height: 1; letter-spacing: -5px;
+text-shadow: 0 0 40px rgba(255,255,255,0.08);
 }
 .date-label {
-font-size: 14px; font-weight: 400; letter-spacing: 3px;
-text-transform: uppercase; opacity: 0.55; margin-top: 2px;
+font-size: 13px; font-weight: 400; letter-spacing: 4px;
+text-transform: uppercase; opacity: 0.45; margin-top: 2px;
 }
 
 @keyframes fadeDown {
-from { opacity:0; transform: translateX(-50%) translateY(-16px); }
-to   { opacity:1; transform: translateX(-50%) translateY(0); }
+from { opacity:0; transform: translateY(-14px); }
+to   { opacity:1; transform: translateY(0); }
 }
 
-/* ── WEATHER WIDGET ── */
-.weather-widget {
-position: absolute;
-top: 192px; left: 16px; right: 16px;
+/* CARD base */
+.card {
 background: rgba(255,255,255,0.06);
 border: 1px solid rgba(255,255,255,0.1);
 border-radius: 20px;
-padding: 14px 18px;
-color: white;
-z-index: 10;
-animation: fadeDown 0.9s 0.1s ease both; opacity: 0;
-backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+padding: 14px 16px;
+margin-bottom: 12px;
+animation: fadeDown 0.8s ease both;
+opacity: 0;
 }
 
-.weather-top {
-display: flex; justify-content: space-between; align-items: flex-start;
-}
+/* WEATHER */
+.weather-card { animation-delay: 0.05s; }
 
+.weather-top { display: flex; justify-content: space-between; align-items: flex-start; }
 .weather-left { display: flex; align-items: center; gap: 12px; }
-.weather-icon-big { font-size: 42px; line-height: 1; }
-.weather-main-temp {
-font-size: 38px; font-weight: 200; line-height: 1; letter-spacing: -2px;
-}
-.weather-main-temp sup { font-size: 18px; opacity: 0.7; }
-
+.w-icon { font-size: 44px; line-height: 1; }
+.w-temp { font-size: 40px; font-weight: 200; line-height: 1; letter-spacing: -2px; }
+.w-temp sup { font-size: 18px; opacity: 0.65; }
 .weather-right { text-align: right; }
-.weather-loc { font-size: 14px; font-weight: 700; opacity: 0.9; }
-.weather-desc { font-size: 12px; opacity: 0.55; margin-top: 2px; }
-.weather-feels { font-size: 11px; opacity: 0.4; margin-top: 1px; }
+.w-loc { font-size: 15px; font-weight: 700; opacity: 0.9; }
+.w-desc { font-size: 12px; opacity: 0.5; margin-top: 3px; }
+.w-feels { font-size: 11px; opacity: 0.38; margin-top: 2px; }
 
-.weather-divider {
-height: 1px; background: rgba(255,255,255,0.08); margin: 10px 0;
-}
+.w-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 12px 0; }
 
-.weather-row {
-display: flex; justify-content: space-between;
-}
+.w-stats { display: flex; justify-content: space-around; }
+.w-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.w-stat-val { font-size: 14px; font-weight: 700; }
+.w-stat-lbl { font-size: 10px; opacity: 0.38; letter-spacing: 0.3px; }
 
-.weather-stat {
-display: flex; flex-direction: column; align-items: center; gap: 2px;
-font-size: 11px;
-}
-.weather-stat-val { font-size: 15px; font-weight: 600; }
-.weather-stat-lbl { opacity: 0.45; letter-spacing: 0.5px; }
-.weather-loading { font-size: 12px; opacity: 0.4; text-align: center; padding: 4px 0; }
+.w-loading { text-align: center; font-size: 12px; opacity: 0.35; padding: 6px 0; }
 
-/* ── CLAUDE WIDGET ── */
-.claude-widget {
-position: absolute;
-top: 350px; left: 16px; right: 16px;
-background: rgba(255,255,255,0.05);
-border: 1px solid rgba(255,165,0,0.2);
-border-radius: 20px;
-padding: 14px 16px 12px;
-color: white;
-z-index: 10;
-animation: fadeDown 1s 0.2s ease both; opacity: 0;
-backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-min-height: 90px;
-}
+/* CLAUDE */
+.claude-card { border-color: rgba(245,158,11,0.2); animation-delay: 0.12s; }
 
-.claude-header {
-display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
-}
-
+.claude-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
 .claude-logo {
 width: 26px; height: 26px;
 background: linear-gradient(135deg, #d97706, #f59e0b);
 border-radius: 8px;
 display: flex; align-items: center; justify-content: center;
 font-size: 14px; flex-shrink: 0;
-box-shadow: 0 0 12px rgba(245,158,11,0.3);
+box-shadow: 0 0 14px rgba(245,158,11,0.25);
 }
-
-.claude-title {
-font-size: 12px; font-weight: 700; opacity: 0.7; letter-spacing: 1px;
-text-transform: uppercase;
-}
-
+.claude-title { font-size: 11px; font-weight: 700; opacity: 0.55; letter-spacing: 1.2px; text-transform: uppercase; }
 .claude-refresh {
-margin-left: auto; font-size: 14px; opacity: 0.35; cursor: pointer;
-transition: opacity 0.2s, transform 0.3s;
-background: none; border: none; color: white; padding: 2px;
+margin-left: auto; background: none; border: none; color: white;
+font-size: 16px; opacity: 0.3; cursor: pointer; padding: 4px;
+transition: opacity 0.2s, transform 0.4s ease;
 }
-.claude-refresh:hover { opacity: 0.7; }
+.claude-refresh:active { opacity: 0.8; }
 .claude-refresh.spinning { transform: rotate(360deg); opacity: 0.6; }
+.claude-text { font-size: 13px; line-height: 1.65; opacity: 0.72; font-style: italic; min-height: 42px; }
+.claude-text.loading { opacity: 0.25; }
 
-.claude-text {
-font-size: 12.5px; line-height: 1.6; opacity: 0.75;
-font-style: italic;
-min-height: 40px;
-transition: opacity 0.3s;
-}
-
-.claude-text.loading { opacity: 0.3; }
-
-/* ── SECTION LABEL ── */
+/* SECTION LABEL */
 .section-label {
-position: absolute; left: 22px;
-color: rgba(255,255,255,0.3);
 font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
-text-transform: uppercase; z-index: 10;
-}
-.my-apps-label {
-top: 484px;
-animation: fadeDown 1s 0.25s ease both; opacity: 0;
+text-transform: uppercase; opacity: 0.3; margin-bottom: 12px;
+animation: fadeDown 0.9s 0.18s ease both; opacity: 0;
 }
 
-/* ── APPS GRID ── */
+/* APPS GRID */
 .apps-grid {
-position: absolute;
-top: 502px; left: 16px; right: 16px;
 display: grid;
 grid-template-columns: repeat(4, 1fr);
-gap: 14px 8px;
-z-index: 10;
+gap: 16px 6px;
+animation: fadeDown 1s 0.22s ease both;
+opacity: 0;
+margin-bottom: 16px;
 }
 
 .app-icon {
-display: flex; flex-direction: column; align-items: center; gap: 5px;
-cursor: pointer; text-decoration: none;
--webkit-tap-highlight-color: transparent; user-select: none;
-animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both; opacity: 0;
-}
-
-.app-icon:nth-child(1) { animation-delay: 0.3s; }
-.app-icon:nth-child(2) { animation-delay: 0.38s; }
-.app-icon:nth-child(3) { animation-delay: 0.46s; }
-.app-icon:nth-child(4) { animation-delay: 0.54s; }
-.app-icon:nth-child(5) { animation-delay: 0.62s; }
-.app-icon:nth-child(6) { animation-delay: 0.70s; }
-.app-icon:nth-child(7) { animation-delay: 0.78s; }
-
-@keyframes popIn {
-from { opacity:0; transform: scale(0.3); }
-to   { opacity:1; transform: scale(1); }
+display: flex; flex-direction: column; align-items: center; gap: 6px;
+text-decoration: none; cursor: pointer; user-select: none;
 }
 
 .icon-body {
-width: 68px; height: 68px; border-radius: 16px;
+width: 100%; aspect-ratio: 1;
+border-radius: 18px;
 display: flex; align-items: center; justify-content: center;
 position: relative;
-transition: transform 0.12s ease;
-box-shadow: 0 6px 18px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.2);
+transition: transform 0.1s ease;
+box-shadow: 0 6px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.22);
 overflow: hidden;
 }
 
 .icon-body::before {
-content: ‘’; position: absolute; inset: 0;
-background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 55%);
-border-radius: 16px; z-index: 1;
-}
-.icon-body::after {
-content: ‘’; position: absolute; inset: 0;
-background: rgba(255,255,255,0);
-transition: background 0.15s ease; border-radius: 16px; z-index: 3;
+content:’’; position:absolute; inset:0;
+background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 55%);
+border-radius: 18px; z-index:1;
 }
 
-.app-icon:active .icon-body { transform: scale(0.87); }
-.app-icon:active .icon-body::after { background: rgba(255,255,255,0.15); }
+.app-icon:active .icon-body { transform: scale(0.86); }
 
-.icon-emoji { font-size: 30px; position: relative; z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
+.icon-emoji { font-size: clamp(24px, 7vw, 32px); position: relative; z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
+
 .app-name {
-color: rgba(255,255,255,0.8); font-size: 9.5px; font-weight: 600;
+color: rgba(255,255,255,0.82); font-size: 10px; font-weight: 600;
 text-align: center; text-shadow: 0 1px 4px rgba(0,0,0,0.8);
-line-height: 1.25; max-width: 72px;
+line-height: 1.25; width: 100%;
 }
 
 .badge {
@@ -262,10 +186,6 @@ width: 17px; height: 17px; background: #ef4444;
 border-radius: 50%; border: 2px solid #000;
 display: flex; align-items: center; justify-content: center;
 font-size: 8px; font-weight: 800; color: white; z-index: 4;
-animation: badgePulse 2.5s ease-in-out 2s infinite;
-}
-@keyframes badgePulse {
-0%,100% { transform: scale(1); } 50% { transform: scale(1.2); }
 }
 
 .ic-agenda  { background: linear-gradient(145deg, #7c3aed, #a855f7, #6d28d9); }
@@ -276,286 +196,209 @@ animation: badgePulse 2.5s ease-in-out 2s infinite;
 .ic-nood    { background: linear-gradient(145deg, #ea580c, #fb923c, #c2410c); }
 .ic-sigbenz { background: linear-gradient(145deg, #475569, #94a3b8, #334155); }
 
-/* ── DOCK ── */
+/* DOCK */
 .dock {
-position: absolute; bottom: 28px; left: 20px; right: 20px; height: 86px;
-background: rgba(255,255,255,0.07);
+position: fixed;
+bottom: 0; left: 0; right: 0;
+padding: 10px 20px calc(var(–safe-bottom) + 10px);
+background: rgba(0,0,0,0.85);
 backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-border-radius: 28px; border: 1px solid rgba(255,255,255,0.1);
-display: flex; align-items: center; justify-content: space-around;
-padding: 0 14px; z-index: 20;
-box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-animation: slideUp 0.7s 0.65s cubic-bezier(0.34,1.3,0.64,1) both; opacity: 0;
+border-top: 1px solid rgba(255,255,255,0.07);
+display: flex; justify-content: space-around; align-items: center;
+z-index: 100;
 }
-@keyframes slideUp {
-from { opacity:0; transform: translateY(40px); }
-to   { opacity:1; transform: translateY(0); }
-}
-.dock .app-icon { animation: none; opacity: 1; }
 
-.home-indicator {
-position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
-width: 120px; height: 5px;
-background: rgba(255,255,255,0.28); border-radius: 3px; z-index: 100;
-}
+.dock .app-icon { width: 60px; }
+.dock .icon-body { border-radius: 16px; }
 </style>
 
 </head>
 <body>
 
-<div class="phone-frame">
-  <div class="bg"></div>
-  <div class="stars" id="stars"></div>
-  <div class="vignette"></div>
-  <div class="notch"></div>
+<div class="stars" id="stars"></div>
 
-  <!-- Status bar -->
-
-  <div class="statusbar">
-    <span class="status-time" id="clock">09:41</span>
-    <div class="status-icons">
-      <svg viewBox="0 0 24 24"><rect x="1" y="14" width="3" height="7" rx="1"/><rect x="6" y="10" width="3" height="11" rx="1"/><rect x="11" y="6" width="3" height="15" rx="1"/><rect x="16" y="2" width="3" height="19" rx="1" opacity="0.4"/></svg>
-      <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-      <svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="2" fill="none" stroke="white" stroke-width="1.5"/><rect x="3.5" y="8.5" width="13" height="7" rx="1"/><path d="M22 11v2" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-    </div>
-  </div>
-
-  <!-- Date -->
-
-  <div class="date-widget">
-    <div class="date-day" id="dateDay">7</div>
-    <div class="date-label" id="dateLabel">Zaterdag · Maart</div>
-  </div>
-
-  <!-- Weather widget -->
-
-  <div class="weather-widget" id="weatherWidget">
-    <div class="weather-loading" id="weatherLoading">Weer laden voor Leende…</div>
-    <div id="weatherContent" style="display:none">
-      <div class="weather-top">
-        <div class="weather-left">
-          <div class="weather-icon-big" id="wIcon">🌤️</div>
-          <div class="weather-main-temp" id="wTemp">–<sup>°C</sup></div>
-        </div>
-        <div class="weather-right">
-          <div class="weather-loc">Leende</div>
-          <div class="weather-desc" id="wDesc">–</div>
-          <div class="weather-feels" id="wFeels">–</div>
-        </div>
-      </div>
-      <div class="weather-divider"></div>
-      <div class="weather-row">
-        <div class="weather-stat">
-          <span class="weather-stat-val" id="wWind">–</span>
-          <span class="weather-stat-lbl">💨 Wind</span>
-        </div>
-        <div class="weather-stat">
-          <span class="weather-stat-val" id="wHumidity">–</span>
-          <span class="weather-stat-lbl">💧 Vochtigheid</span>
-        </div>
-        <div class="weather-stat">
-          <span class="weather-stat-val" id="wRain">–</span>
-          <span class="weather-stat-lbl">🌧 Neerslag</span>
-        </div>
-        <div class="weather-stat">
-          <span class="weather-stat-val" id="wUV">–</span>
-          <span class="weather-stat-lbl">☀️ UV-index</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Claude widget -->
-
-  <div class="claude-widget" id="claudeWidget">
-    <div class="claude-header">
-      <div class="claude-logo">✦</div>
-      <span class="claude-title">Claude · Dagelijkse tip</span>
-      <button class="claude-refresh" id="claudeRefresh" title="Nieuwe tip">↻</button>
-    </div>
-    <div class="claude-text" id="claudeText">Laden…</div>
-  </div>
-
-  <!-- Section label -->
-
-  <div class="section-label my-apps-label">Mijn apps</div>
-
-  <!-- Apps grid -->
-
-  <div class="apps-grid">
+<div class="screen">
+  <div class="content">
 
 ```
-<a class="app-icon" href="https://roblizet.github.io/Afspraken/" target="_blank">
-  <div class="icon-body ic-agenda">
-    <span class="icon-emoji">📅</span>
-    <div class="badge">2</div>
-  </div>
-  <span class="app-name">Onze Agenda</span>
-</a>
+<!-- Date -->
+<div class="date-block">
+  <div class="date-day" id="dateDay">7</div>
+  <div class="date-label" id="dateLabel">Zaterdag · Maart</div>
+</div>
 
-<a class="app-icon" href="https://roblizet.github.io/Finance/" target="_blank">
-  <div class="icon-body ic-finance">
-    <span class="icon-emoji">💶</span>
+<!-- Weather -->
+<div class="card weather-card">
+  <div id="wLoading" class="w-loading">Weer laden voor Leende…</div>
+  <div id="wContent" style="display:none">
+    <div class="weather-top">
+      <div class="weather-left">
+        <div class="w-icon" id="wIcon">🌤️</div>
+        <div class="w-temp" id="wTemp">–<sup>°C</sup></div>
+      </div>
+      <div class="weather-right">
+        <div class="w-loc">Leende</div>
+        <div class="w-desc" id="wDesc">–</div>
+        <div class="w-feels" id="wFeels">–</div>
+      </div>
+    </div>
+    <div class="w-divider"></div>
+    <div class="w-stats">
+      <div class="w-stat"><span class="w-stat-val" id="wWind">–</span><span class="w-stat-lbl">💨 Wind</span></div>
+      <div class="w-stat"><span class="w-stat-val" id="wHum">–</span><span class="w-stat-lbl">💧 Vochtigheid</span></div>
+      <div class="w-stat"><span class="w-stat-val" id="wRain">–</span><span class="w-stat-lbl">🌧 Neerslag</span></div>
+      <div class="w-stat"><span class="w-stat-val" id="wUV">–</span><span class="w-stat-lbl">☀️ UV-index</span></div>
+    </div>
   </div>
-  <span class="app-name">Financiën RL</span>
-</a>
+</div>
 
-<a class="app-icon" href="https://roblizet.github.io/MedApp/" target="_blank">
-  <div class="icon-body ic-med">
-    <span class="icon-emoji">💊</span>
+<!-- Claude widget -->
+<div class="card claude-card">
+  <div class="claude-header">
+    <div class="claude-logo">✦</div>
+    <span class="claude-title">Claude · Dagelijkse tip</span>
+    <button class="claude-refresh" id="claudeRefresh">↻</button>
   </div>
-  <span class="app-name">Medapp Rob</span>
-</a>
+  <div class="claude-text loading" id="claudeText">Laden…</div>
+</div>
 
-<a class="app-icon" href="https://roblizet.github.io/Crypto/" target="_blank">
-  <div class="icon-body ic-crypto">
-    <span class="icon-emoji">₿</span>
-  </div>
-  <span class="app-name">Crypto</span>
-</a>
+<!-- Apps -->
+<div class="section-label">Mijn apps</div>
 
-<a class="app-icon" href="https://roblizet.github.io/Autokosten/" target="_blank">
-  <div class="icon-body ic-auto">
-    <span class="icon-emoji">🚗</span>
-  </div>
-  <span class="app-name">Autokosten</span>
-</a>
+<div class="apps-grid">
 
-<a class="app-icon" href="https://roblizet.github.io/BelangrijkLizet" target="_blank">
-  <div class="icon-body ic-nood">
-    <span class="icon-emoji">🚨</span>
-  </div>
-  <span class="app-name">Nood Info</span>
-</a>
+  <a class="app-icon" href="https://roblizet.github.io/Afspraken/" target="_blank">
+    <div class="icon-body ic-agenda">
+      <span class="icon-emoji">📅</span>
+      <div class="badge">2</div>
+    </div>
+    <span class="app-name">Onze Agenda</span>
+  </a>
 
-<a class="app-icon" href="https://roblizet.github.io/SigarettenBenzine" target="_blank">
-  <div class="icon-body ic-sigbenz">
-    <span class="icon-emoji">⛽</span>
-  </div>
-  <span class="app-name">Sigaret & Benzine</span>
-</a>
+  <a class="app-icon" href="https://roblizet.github.io/Finance/" target="_blank">
+    <div class="icon-body ic-finance"><span class="icon-emoji">💶</span></div>
+    <span class="app-name">Financiën RL</span>
+  </a>
+
+  <a class="app-icon" href="https://roblizet.github.io/MedApp/" target="_blank">
+    <div class="icon-body ic-med"><span class="icon-emoji">💊</span></div>
+    <span class="app-name">Medapp Rob</span>
+  </a>
+
+  <a class="app-icon" href="https://roblizet.github.io/Crypto/" target="_blank">
+    <div class="icon-body ic-crypto"><span class="icon-emoji">₿</span></div>
+    <span class="app-name">Crypto</span>
+  </a>
+
+  <a class="app-icon" href="https://roblizet.github.io/Autokosten/" target="_blank">
+    <div class="icon-body ic-auto"><span class="icon-emoji">🚗</span></div>
+    <span class="app-name">Autokosten</span>
+  </a>
+
+  <a class="app-icon" href="https://roblizet.github.io/BelangrijkLizet" target="_blank">
+    <div class="icon-body ic-nood"><span class="icon-emoji">🚨</span></div>
+    <span class="app-name">Nood Info</span>
+  </a>
+
+  <a class="app-icon" href="https://roblizet.github.io/SigarettenBenzine" target="_blank">
+    <div class="icon-body ic-sigbenz"><span class="icon-emoji">⛽</span></div>
+    <span class="app-name">Sigaret & Benzine</span>
+  </a>
+
+</div>
 ```
 
-  </div>
+  </div><!-- /content -->
+</div><!-- /screen -->
 
-  <!-- Dock -->
+<!-- Dock -->
 
-  <div class="dock">
-    <div class="app-icon">
-      <div class="icon-body" style="background:linear-gradient(145deg,#22c55e,#16a34a)">
-        <span class="icon-emoji">📞</span>
-      </div>
-    </div>
-    <div class="app-icon">
-      <div class="icon-body" style="background:linear-gradient(145deg,#3b82f6,#2563eb)">
-        <span class="icon-emoji">💬</span>
-      </div>
-    </div>
-    <div class="app-icon">
-      <div class="icon-body" style="background:linear-gradient(145deg,#1db954,#158a3e)">
-        <span class="icon-emoji">🎵</span>
-      </div>
-    </div>
-    <div class="app-icon">
-      <div class="icon-body" style="background:linear-gradient(145deg,#0ea5e9,#0284c7)">
-        <span class="icon-emoji">🧭</span>
-      </div>
+<div class="dock">
+  <div class="app-icon" style="width:60px">
+    <div class="icon-body" style="background:linear-gradient(145deg,#22c55e,#16a34a);border-radius:16px">
+      <span class="icon-emoji">📞</span>
     </div>
   </div>
-
-  <div class="home-indicator"></div>
+  <div class="app-icon" style="width:60px">
+    <div class="icon-body" style="background:linear-gradient(145deg,#3b82f6,#2563eb);border-radius:16px">
+      <span class="icon-emoji">💬</span>
+    </div>
+  </div>
+  <div class="app-icon" style="width:60px">
+    <div class="icon-body" style="background:linear-gradient(145deg,#1db954,#158a3e);border-radius:16px">
+      <span class="icon-emoji">🎵</span>
+    </div>
+  </div>
+  <div class="app-icon" style="width:60px">
+    <div class="icon-body" style="background:linear-gradient(145deg,#0ea5e9,#0284c7);border-radius:16px">
+      <span class="icon-emoji">🧭</span>
+    </div>
+  </div>
 </div>
 
 <script>
-// ── CLOCK ──────────────────────────────────────────
-function updateClock() {
-  const n = new Date();
-  document.getElementById('clock').textContent =
-    String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0');
-}
-updateClock(); setInterval(updateClock, 1000);
-
-// ── DATE ───────────────────────────────────────────
+// CLOCK in status bar not needed (iOS shows its own)
+// DATE
 const days   = ['Zondag','Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag','Zaterdag'];
 const months = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
 const now = new Date();
 document.getElementById('dateDay').textContent = now.getDate();
 document.getElementById('dateLabel').textContent = days[now.getDay()] + ' · ' + months[now.getMonth()];
 
-// ── STARS ──────────────────────────────────────────
+// STARS
 const starsEl = document.getElementById('stars');
-for (let i = 0; i < 70; i++) {
+for (let i = 0; i < 80; i++) {
   const s = document.createElement('div');
+  const sz = Math.random() > 0.85 ? 3 : 2;
   s.className = 'star';
-  s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*5}s;--op:${0.15+Math.random()*0.6};width:${Math.random()>0.85?3:2}px;height:${Math.random()>0.85?3:2}px;animation-delay:${Math.random()*6}s;`;
+  s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;--d:${2+Math.random()*5}s;--op:${0.1+Math.random()*0.55};animation-delay:${Math.random()*6}s;`;
   starsEl.appendChild(s);
 }
 
-// ── WEATHER (Open-Meteo, gratis, geen API key) ─────
-// Leende: lat=51.354, lon=5.546
-const WMO = {
-  0:'Helder ☀️', 1:'Overwegend helder 🌤️', 2:'Gedeeltelijk bewolkt ⛅', 3:'Bewolkt ☁️',
-  45:'Mist 🌫️', 48:'IJsmist 🌫️',
-  51:'Lichte motregen 🌦️', 53:'Motregen 🌦️', 55:'Dichte motregen 🌧️',
-  61:'Lichte regen 🌧️', 63:'Regen 🌧️', 65:'Zware regen 🌧️',
-  71:'Lichte sneeuw 🌨️', 73:'Sneeuw 🌨️', 75:'Zware sneeuw ❄️',
-  80:'Buien 🌦️', 81:'Buien 🌦️', 82:'Zware buien ⛈️',
-  95:'Onweer ⛈️', 96:'Onweer met hagel ⛈️', 99:'Zwaar onweer ⛈️'
-};
-
-const WMO_ICON = {
-  0:'☀️', 1:'🌤️', 2:'⛅', 3:'☁️', 45:'🌫️', 48:'🌫️',
-  51:'🌦️', 53:'🌦️', 55:'🌧️', 61:'🌧️', 63:'🌧️', 65:'🌧️',
-  71:'🌨️', 73:'🌨️', 75:'❄️', 80:'🌦️', 81:'🌦️', 82:'⛈️',
-  95:'⛈️', 96:'⛈️', 99:'⛈️'
-};
+// WEATHER
+const WMO_DESC = {0:'Helder',1:'Overwegend helder',2:'Gedeeltelijk bewolkt',3:'Bewolkt',45:'Mist',48:'IJsmist',51:'Lichte motregen',53:'Motregen',55:'Dichte motregen',61:'Lichte regen',63:'Regen',65:'Zware regen',71:'Lichte sneeuw',73:'Sneeuw',75:'Zware sneeuw',80:'Buien',81:'Buien',82:'Zware buien',95:'Onweer',96:'Onweer met hagel',99:'Zwaar onweer'};
+const WMO_ICON = {0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'🌨️',73:'🌨️',75:'❄️',80:'🌦️',81:'🌦️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'};
 
 async function loadWeather() {
   try {
-    const url = 'https://api.open-meteo.com/v1/forecast?latitude=51.354&longitude=5.546'
-      + '&current=temperature_2m,apparent_temperature,relative_humidity_2m,'
-      + 'precipitation,wind_speed_10m,uv_index,weather_code'
-      + '&wind_speed_unit=kmh&timezone=Europe%2FAmsterdam';
-    const res = await fetch(url);
-    const d = await res.json();
+    const url = 'https://api.open-meteo.com/v1/forecast?latitude=51.354&longitude=5.546&current=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,wind_speed_10m,uv_index,weather_code&wind_speed_unit=kmh&timezone=Europe%2FAmsterdam';
+    const d = await (await fetch(url)).json();
     const c = d.current;
-
-    document.getElementById('wIcon').textContent = WMO_ICON[c.weather_code] || '🌡️';
-    document.getElementById('wTemp').innerHTML = Math.round(c.temperature_2m) + '<sup>°C</sup>';
-    document.getElementById('wDesc').textContent = WMO[c.weather_code] || 'Onbekend';
+    document.getElementById('wIcon').textContent  = WMO_ICON[c.weather_code] || '🌡️';
+    document.getElementById('wTemp').innerHTML    = Math.round(c.temperature_2m) + '<sup>°C</sup>';
+    document.getElementById('wDesc').textContent  = WMO_DESC[c.weather_code] || '';
     document.getElementById('wFeels').textContent = 'Voelt als ' + Math.round(c.apparent_temperature) + '°C';
-    document.getElementById('wWind').textContent = Math.round(c.wind_speed_10m) + ' km/h';
-    document.getElementById('wHumidity').textContent = c.relative_humidity_2m + '%';
-    document.getElementById('wRain').textContent = c.precipitation + ' mm';
-    document.getElementById('wUV').textContent = Math.round(c.uv_index);
-
-    document.getElementById('weatherLoading').style.display = 'none';
-    document.getElementById('weatherContent').style.display = 'block';
+    document.getElementById('wWind').textContent  = Math.round(c.wind_speed_10m) + ' km/h';
+    document.getElementById('wHum').textContent   = c.relative_humidity_2m + '%';
+    document.getElementById('wRain').textContent  = c.precipitation + ' mm';
+    document.getElementById('wUV').textContent    = Math.round(c.uv_index);
+    document.getElementById('wLoading').style.display  = 'none';
+    document.getElementById('wContent').style.display  = 'block';
   } catch(e) {
-    document.getElementById('weatherLoading').textContent = 'Weer tijdelijk niet beschikbaar';
+    document.getElementById('wLoading').textContent = 'Weer niet beschikbaar';
   }
 }
 loadWeather();
 
-// ── CLAUDE WIDGET ──────────────────────────────────
+// CLAUDE WIDGET
 const TOPICS = [
-  'Geef een korte dagelijkse motivatietip voor een magazijnbeheerder die ook hobby-apps bouwt. Max 2 zinnen. In het Nederlands.',
-  'Geef een korte interessante weetje over cryptocurrency of Bitcoin. Max 2 zinnen. In het Nederlands.',
+  'Geef een korte motivatietip voor een magazijnbeheerder die hobby-apps bouwt. Max 2 zinnen. In het Nederlands.',
+  'Geef een kort interessant weetje over cryptocurrency of Bitcoin. Max 2 zinnen. In het Nederlands.',
   'Geef een slimme tip voor iemand die PWA-webapps bouwt met GitHub Pages. Max 2 zinnen. In het Nederlands.',
-  'Geef een inspirerende spreuk voor een drukke dag. Max 2 zinnen. In het Nederlands.',
-  'Geef een tip om energie te sparen op een werkdag. Max 2 zinnen. In het Nederlands.',
-  'Geef een interessant feit over progressive rock muziek of een band zoals Marillion. Max 2 zinnen. In het Nederlands.',
+  'Geef een inspirerende spreuk voor een nieuwe dag. Max 2 zinnen. In het Nederlands.',
+  'Geef een tip om energie te sparen op een werkdag in het magazijn. Max 2 zinnen. In het Nederlands.',
+  'Geef een interessant feit over progressive rock muziek of de band Marillion. Max 2 zinnen. In het Nederlands.',
+  'Geef een tip over gezond leven voor iemand die een CPAP machine gebruikt. Max 2 zinnen. In het Nederlands.',
 ];
 
-let topicIndex = Math.floor(Math.random() * TOPICS.length);
+let tipIdx = Math.floor(Math.random() * TOPICS.length);
 
 async function loadClaude() {
-  const textEl = document.getElementById('claudeText');
+  const el  = document.getElementById('claudeText');
   const btn = document.getElementById('claudeRefresh');
-  textEl.classList.add('loading');
-  textEl.textContent = 'Even nadenken…';
+  el.classList.add('loading');
+  el.textContent = 'Even nadenken…';
   btn.classList.add('spinning');
-
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -563,22 +406,21 @@ async function loadClaude() {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
-        messages: [{ role: 'user', content: TOPICS[topicIndex % TOPICS.length] }]
+        messages: [{ role: 'user', content: TOPICS[tipIdx % TOPICS.length] }]
       })
     });
     const data = await res.json();
-    const text = data.content?.find(b => b.type === 'text')?.text || '–';
-    textEl.textContent = text;
-    topicIndex++;
+    el.textContent = data.content?.find(b => b.type === 'text')?.text || '–';
+    tipIdx++;
   } catch(e) {
-    textEl.textContent = 'Kon Claude niet bereiken. Probeer later opnieuw.';
+    el.textContent = 'Kon Claude niet bereiken. Probeer later opnieuw.';
   }
-
-  textEl.classList.remove('loading');
+  el.classList.remove('loading');
   btn.classList.remove('spinning');
+  // reset animation
   btn.style.transition = 'none';
-  btn.offsetHeight; // reflow
-  btn.style.transition = 'opacity 0.2s, transform 0.3s';
+  btn.offsetHeight;
+  btn.style.transition = '';
 }
 
 loadClaude();

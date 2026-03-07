@@ -38,7 +38,7 @@ overflow-y: auto;
 overflow-x: hidden;
 -webkit-overflow-scrolling: touch;
 padding-top: calc(var(–safe-top) + 8px);
-padding-bottom: calc(var(–safe-bottom) + 100px);
+padding-bottom: calc(var(–safe-bottom) + 24px);
 padding-left: 16px;
 padding-right: 16px;
 }
@@ -196,22 +196,7 @@ font-size: 8px; font-weight: 800; color: white; z-index: 4;
 .ic-nood    { background: linear-gradient(145deg, #ea580c, #fb923c, #c2410c); }
 .ic-sigbenz { background: linear-gradient(145deg, #475569, #94a3b8, #334155); }
 
-/* DOCK */
-.dock {
-position: fixed;
-bottom: 0; left: 0; right: 0;
-padding: 10px 20px calc(var(–safe-bottom) + 10px);
-background: rgba(0,0,0,0.85);
-backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-border-top: 1px solid rgba(255,255,255,0.07);
-display: flex; justify-content: space-around; align-items: center;
-z-index: 100;
-}
-
-.dock .app-icon { width: 60px; }
-.dock .icon-body { border-radius: 16px; }
 </style>
-
 </head>
 <body>
 
@@ -306,35 +291,15 @@ z-index: 100;
   </a>
 
 </div>
+
+<!-- Footer -->
+<div style="text-align:center; padding: 20px 0 10px; animation: fadeDown 1s 0.4s ease both; opacity:0;">
+  <span style="font-size:10.5px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; opacity:0.25; background: linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.45), rgba(255,255,255,0.15)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Made by Rob Borghouts · 2026</span>
+</div>
 ```
 
   </div><!-- /content -->
 </div><!-- /screen -->
-
-<!-- Dock -->
-
-<div class="dock">
-  <div class="app-icon" style="width:60px">
-    <div class="icon-body" style="background:linear-gradient(145deg,#22c55e,#16a34a);border-radius:16px">
-      <span class="icon-emoji">📞</span>
-    </div>
-  </div>
-  <div class="app-icon" style="width:60px">
-    <div class="icon-body" style="background:linear-gradient(145deg,#3b82f6,#2563eb);border-radius:16px">
-      <span class="icon-emoji">💬</span>
-    </div>
-  </div>
-  <div class="app-icon" style="width:60px">
-    <div class="icon-body" style="background:linear-gradient(145deg,#1db954,#158a3e);border-radius:16px">
-      <span class="icon-emoji">🎵</span>
-    </div>
-  </div>
-  <div class="app-icon" style="width:60px">
-    <div class="icon-body" style="background:linear-gradient(145deg,#0ea5e9,#0284c7);border-radius:16px">
-      <span class="icon-emoji">🧭</span>
-    </div>
-  </div>
-</div>
 
 <script>
 // CLOCK in status bar not needed (iOS shows its own)

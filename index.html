@@ -4,14 +4,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
-<!-- PWA fullscreen op iPhone -->
-
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Rob's Scherm">
 <meta name="theme-color" content="#000000">
-
 <title>Rob's Beginscherm</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -53,13 +49,12 @@ animation: twinkle var(–d,3s) ease-in-out infinite; opacity: var(–op,0.4);
 0%,100% { opacity: var(–op,0.4); } 50% { opacity: 0.05; }
 }
 
-/* All content above stars */
 .content { position: relative; z-index: 1; }
 
-/* DATE */
+/* DATE — 7 iets lager gezet via padding-top */
 .date-block {
 text-align: center;
-padding: 10px 0 18px;
+padding: 28px 0 18px; /* ← was 10px, nu 28px */
 animation: fadeDown 0.7s ease both;
 }
 .date-day {
@@ -68,7 +63,9 @@ text-shadow: 0 0 40px rgba(255,255,255,0.08);
 }
 .date-label {
 font-size: 13px; font-weight: 400; letter-spacing: 4px;
-text-transform: uppercase; opacity: 0.45; margin-top: 2px;
+text-transform: uppercase;
+opacity: 0.75; /* ← was 0.45 */
+margin-top: 2px;
 }
 
 @keyframes fadeDown {
@@ -94,20 +91,20 @@ opacity: 0;
 .weather-left { display: flex; align-items: center; gap: 12px; }
 .w-icon { font-size: 44px; line-height: 1; }
 .w-temp { font-size: 40px; font-weight: 200; line-height: 1; letter-spacing: -2px; }
-.w-temp sup { font-size: 18px; opacity: 0.65; }
+.w-temp sup { font-size: 18px; opacity: 0.8; } /* ← was 0.65 */
 .weather-right { text-align: right; }
-.w-loc { font-size: 15px; font-weight: 700; opacity: 0.9; }
-.w-desc { font-size: 12px; opacity: 0.5; margin-top: 3px; }
-.w-feels { font-size: 11px; opacity: 0.38; margin-top: 2px; }
+.w-loc { font-size: 15px; font-weight: 700; opacity: 1; } /* ← was 0.9 */
+.w-desc { font-size: 12px; opacity: 0.75; margin-top: 3px; } /* ← was 0.5 */
+.w-feels { font-size: 11px; opacity: 0.6; margin-top: 2px; } /* ← was 0.38 */
 
 .w-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 12px 0; }
 
 .w-stats { display: flex; justify-content: space-around; }
 .w-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .w-stat-val { font-size: 14px; font-weight: 700; }
-.w-stat-lbl { font-size: 10px; opacity: 0.38; letter-spacing: 0.3px; }
+.w-stat-lbl { font-size: 10px; opacity: 0.65; letter-spacing: 0.3px; } /* ← was 0.38 */
 
-.w-loading { text-align: center; font-size: 12px; opacity: 0.35; padding: 6px 0; }
+.w-loading { text-align: center; font-size: 12px; opacity: 0.6; padding: 6px 0; } /* ← was 0.35 */
 
 /* CLAUDE */
 .claude-card { border-color: rgba(245,158,11,0.2); animation-delay: 0.12s; }
@@ -121,22 +118,24 @@ display: flex; align-items: center; justify-content: center;
 font-size: 14px; flex-shrink: 0;
 box-shadow: 0 0 14px rgba(245,158,11,0.25);
 }
-.claude-title { font-size: 11px; font-weight: 700; opacity: 0.55; letter-spacing: 1.2px; text-transform: uppercase; }
+.claude-title { font-size: 11px; font-weight: 700; opacity: 0.85; letter-spacing: 1.2px; text-transform: uppercase; } /* ← was 0.55 */
 .claude-refresh {
 margin-left: auto; background: none; border: none; color: white;
-font-size: 16px; opacity: 0.3; cursor: pointer; padding: 4px;
+font-size: 16px; opacity: 0.55; cursor: pointer; padding: 4px; /* ← was 0.3 */
 transition: opacity 0.2s, transform 0.4s ease;
 }
 .claude-refresh:active { opacity: 0.8; }
 .claude-refresh.spinning { transform: rotate(360deg); opacity: 0.6; }
-.claude-text { font-size: 13px; line-height: 1.65; opacity: 0.72; font-style: italic; min-height: 42px; }
-.claude-text.loading { opacity: 0.25; }
+.claude-text { font-size: 13px; line-height: 1.65; opacity: 0.92; font-style: italic; min-height: 42px; } /* ← was 0.72 */
+.claude-text.loading { opacity: 0.35; }
 
 /* SECTION LABEL */
 .section-label {
 font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
-text-transform: uppercase; opacity: 0.3; margin-bottom: 12px;
-animation: fadeDown 0.9s 0.18s ease both; opacity: 0;
+text-transform: uppercase;
+opacity: 0.6; /* ← was 0.3 */
+margin-bottom: 12px;
+animation: fadeDown 0.9s 0.18s ease both;
 }
 
 /* APPS GRID */
@@ -175,7 +174,8 @@ border-radius: 18px; z-index:1;
 .icon-emoji { font-size: clamp(24px, 7vw, 32px); position: relative; z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
 
 .app-name {
-color: rgba(255,255,255,0.82); font-size: 10px; font-weight: 600;
+color: rgba(255,255,255,0.95); /* ← was 0.82 */
+font-size: 10px; font-weight: 700; /* ← was 600 */
 text-align: center; text-shadow: 0 1px 4px rgba(0,0,0,0.8);
 line-height: 1.25; width: 100%;
 }
@@ -195,8 +195,8 @@ font-size: 8px; font-weight: 800; color: white; z-index: 4;
 .ic-auto    { background: linear-gradient(145deg, #2563eb, #60a5fa, #1d4ed8); }
 .ic-nood    { background: linear-gradient(145deg, #ea580c, #fb923c, #c2410c); }
 .ic-sigbenz { background: linear-gradient(145deg, #475569, #94a3b8, #334155); }
-
 </style>
+
 </head>
 <body>
 
@@ -294,7 +294,7 @@ font-size: 8px; font-weight: 800; color: white; z-index: 4;
 
 <!-- Footer -->
 <div style="text-align:center; padding: 20px 0 10px; animation: fadeDown 1s 0.4s ease both; opacity:0;">
-  <span style="font-size:10.5px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; opacity:0.25; background: linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.45), rgba(255,255,255,0.15)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Made by Rob Borghouts · 2026</span>
+  <span style="font-size:10.5px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; opacity:0.45; background: linear-gradient(90deg, rgba(255,255,255,0.3), rgba(255,255,255,0.7), rgba(255,255,255,0.3)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Made by Rob Borghouts · 2026</span>
 </div>
 ```
 
@@ -302,7 +302,11 @@ font-size: 8px; font-weight: 800; color: white; z-index: 4;
 </div><!-- /screen -->
 
 <script>
-// CLOCK in status bar not needed (iOS shows its own)
+// ─── JOUW ANTHROPIC API KEY HIER ─────────────────────────────────
+// Haal hem op via: https://console.anthropic.com/settings/keys
+const CLAUDE_API_KEY = 'sk-ant-JOUW-API-KEY-HIER';
+// ─────────────────────────────────────────────────────────────────
+
 // DATE
 const days   = ['Zondag','Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag','Zaterdag'];
 const months = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
@@ -367,22 +371,28 @@ async function loadClaude() {
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': CLAUDE_API_KEY,                          // ← toegevoegd
+        'anthropic-version': '2023-06-01',                    // ← toegevoegd
+        'anthropic-dangerous-direct-browser-access': 'true'   // ← toegevoegd (CORS fix)
+      },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
+        model: 'claude-haiku-4-5-20251001',   // ← haiku: sneller + goedkoper voor widget
+        max_tokens: 150,
         messages: [{ role: 'user', content: TOPICS[tipIdx % TOPICS.length] }]
       })
     });
     const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
     el.textContent = data.content?.find(b => b.type === 'text')?.text || '–';
     tipIdx++;
   } catch(e) {
-    el.textContent = 'Kon Claude niet bereiken. Probeer later opnieuw.';
+    el.textContent = 'Kon Claude niet bereiken. Controleer de API key.';
+    console.error('Claude widget error:', e);
   }
   el.classList.remove('loading');
   btn.classList.remove('spinning');
-  // reset animation
   btn.style.transition = 'none';
   btn.offsetHeight;
   btn.style.transition = '';

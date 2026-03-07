@@ -370,7 +370,7 @@ async function loadNews() {
   try {
     const res = await fetch(CORS + encodeURIComponent(feed));
     const data = await res.json();
-    const items = (data.items || []).slice(0, 2);
+    const items = (data.items || []).slice(0, 1);
     if (!items.length) throw new Error('Geen items');
 
     container.innerHTML = items.map(item => {

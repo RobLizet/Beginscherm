@@ -238,14 +238,25 @@ font-size: 8px; font-weight: 800; color: white; z-index: 4;
   </div>
 </div>
 
-<!-- Claude widget -->
+<!-- Nieuws widget -->
+<div class="card nieuws-card" style="animation-delay:0.1s">
+  <div class="claude-header">
+    <div class="claude-logo" style="background:linear-gradient(135deg,#dc2626,#ef4444); font-size:13px;">📰</div>
+    <span class="claude-title">Laatste Nieuws</span>
+    <button class="claude-refresh" id="nieuwsRefresh">↻</button>
+  </div>
+  <div id="nieuwsText" style="font-size:13px; line-height:1.55; opacity:0.78; min-height:40px;">Laden…</div>
+  <div id="nieuwsMeta" style="font-size:10.5px; opacity:0.35; margin-top:6px; letter-spacing:0.3px;"></div>
+</div>
+
+<!-- Quote widget -->
 <div class="card claude-card">
   <div class="claude-header">
-    <div class="claude-logo">✦</div>
-    <span class="claude-title">Claude · Dagelijkse tip</span>
-    <button class="claude-refresh" id="claudeRefresh">↻</button>
+    <div class="claude-logo">💡</div>
+    <span class="claude-title">Inspiratie van de dag</span>
+    <button class="claude-refresh" id="quoteRefresh">↻</button>
   </div>
-  <div class="claude-text loading" id="claudeText">Laden…</div>
+  <div class="claude-text" id="quoteText">Laden…</div>
 </div>
 
 <!-- Apps -->
@@ -351,51 +362,63 @@ async function loadWeather() {
 }
 loadWeather();
 
-// CLAUDE WIDGET
-const TOPICS = [
-  'Geef een korte motivatietip voor een magazijnbeheerder die hobby-apps bouwt. Max 2 zinnen. In het Nederlands.',
-  'Geef een kort interessant weetje over cryptocurrency of Bitcoin. Max 2 zinnen. In het Nederlands.',
-  'Geef een slimme tip voor iemand die PWA-webapps bouwt met GitHub Pages. Max 2 zinnen. In het Nederlands.',
-  'Geef een inspirerende spreuk voor een nieuwe dag. Max 2 zinnen. In het Nederlands.',
-  'Geef een tip om energie te sparen op een werkdag in het magazijn. Max 2 zinnen. In het Nederlands.',
-  'Geef een interessant feit over progressive rock muziek of de band Marillion. Max 2 zinnen. In het Nederlands.',
-  'Geef een tip over gezond leven voor iemand die een CPAP machine gebruikt. Max 2 zinnen. In het Nederlands.',
+// INSPIRATIE QUOTES (Nederlands)
+const QUOTES = [
+  { text: 'De beste manier om de toekomst te voorspellen, is hem zelf te maken.', auteur: 'Peter Drucker' },
+  { text: 'Succes is niet definitief, mislukking is niet fataal: het is de moed om door te gaan die telt.', auteur: 'Winston Churchill' },
+  { text: 'Het enige wat je echt hebt, is dit moment. Gebruik het goed.', auteur: 'Onbekend' },
+  { text: 'Kleine stappen elke dag leiden tot grote resultaten.', auteur: 'Onbekend' },
+  { text: 'Wie een goede vriend heeft, heeft een schat.', auteur: 'Nederlands spreekwoord' },
+  { text: 'Elke dag is een nieuwe kans om iets moois te maken.', auteur: 'Onbekend' },
+  { text: 'Geluk is niet iets wat je vindt, het is iets wat je bouwt.', auteur: 'Onbekend' },
+  { text: 'De moed om te beginnen is belangrijker dan de zekerheid te slagen.', auteur: 'Onbekend' },
+  { text: 'Doe wat je kunt, met wat je hebt, waar je ook bent.', auteur: 'Theodore Roosevelt' },
+  { text: 'Rust is geen luiheid. Soms is stilzitten en luisteren naar je gedachten de beste actie.', auteur: 'Onbekend' },
 ];
 
-let tipIdx = Math.floor(Math.random() * TOPICS.length);
+let quoteIdx = Math.floor(Math.random() * QUOTES.length);
 
-async function loadClaude() {
-  const el  = document.getElementById('claudeText');
-  const btn = document.getElementById('claudeRefresh');
-  el.classList.add('loading');
-  el.textContent = 'Even nadenken…';
-  btn.classList.add('spinning');
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: TOPICS[tipIdx % TOPICS.length] }]
-      })
-    });
-    const data = await res.json();
-    el.textContent = data.content?.find(b => b.type === 'text')?.text || '–';
-    tipIdx++;
-  } catch(e) {
-    el.textContent = 'Kon Claude niet bereiken. Probeer later opnieuw.';
-  }
-  el.classList.remove('loading');
-  btn.classList.remove('spinning');
-  // reset animation
-  btn.style.transition = 'none';
-  btn.offsetHeight;
-  btn.style.transition = '';
+function loadQuote() {
+  const el  = document.getElementById('quoteText');
+  const btn = document.getElementById('quoteRefresh');
+  const q = QUOTES[quoteIdx % QUOTES.length];
+  el.innerHTML = `"${q.text}" <span style="opacity:0.4; font-style:normal; font-size:11px;">— ${q.auteur}</span>`;
+  quoteIdx++;
+  btn.style.transition='none'; btn.offsetHeight; btn.style.transition='';
 }
 
-loadClaude();
-document.getElementById('claudeRefresh').addEventListener('click', loadClaude);
+loadQuote();
+document.getElementById('quoteRefresh').addEventListener('click', loadQuote);
+
+// NIEUWS (NOS — nieuwste bericht bovenaan)
+async function loadNieuws() {
+  const el   = document.getElementById('nieuwsText');
+  const meta = document.getElementById('nieuwsMeta');
+  const btn  = document.getElementById('nieuwsRefresh');
+  btn.classList.add('spinning');
+  try {
+    const url = 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ffeeds.nos.nl%2Fnosnieuwsalgemeen&count=1';
+    const d = await (await fetch(url)).json();
+    const item = d.items?.[0];
+    if (!item) throw new Error();
+    el.textContent = item.title;
+    const pub = new Date(item.pubDate);
+    const h = String(pub.getHours()).padStart(2,'0');
+    const m = String(pub.getMinutes()).padStart(2,'0');
+    meta.textContent = h + ':' + m + '  ·  NOS Nieuws';
+    el.style.cursor = 'pointer';
+    el.onclick = () => window.open(item.link, '_blank');
+  } catch(e) {
+    el.textContent = 'Nieuws niet beschikbaar';
+  }
+  btn.classList.remove('spinning');
+  btn.style.transition='none'; btn.offsetHeight; btn.style.transition='';
+}
+loadNieuws();
+document.getElementById('nieuwsRefresh').addEventListener('click', loadNieuws);
+
+
+
 </script>
 
 </body>

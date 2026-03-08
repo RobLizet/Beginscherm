@@ -13,7 +13,7 @@
 <meta name="theme-color" content="#000000">
 
 <title>Rob's Beginscherm</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Playfair+Display:wght@300;400&display=swap" rel="stylesheet">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
 
@@ -37,10 +37,10 @@ background: #000;
 overflow-y: auto;
 overflow-x: hidden;
 -webkit-overflow-scrolling: touch;
-padding-top: calc(var(–safe-top) + 8px);
-padding-bottom: calc(var(–safe-bottom) + 24px);
-padding-left: 16px;
-padding-right: 16px;
+padding-top: calc(var(–safe-top) + 4px);
+padding-bottom: calc(var(–safe-bottom) + 12px);
+padding-left: 14px;
+padding-right: 14px;
 }
 
 /* Stars */
@@ -59,16 +59,17 @@ animation: twinkle var(–d,3s) ease-in-out infinite; opacity: var(–op,0.4);
 /* DATE */
 .date-block {
 text-align: center;
-padding: 6px 0 12px;
+padding: 4px 0 8px;
 animation: fadeDown 0.7s ease both;
 }
 .date-day {
-font-size: 62px; font-weight: 200; line-height: 1; letter-spacing: -3px;
-text-shadow: 0 0 40px rgba(255,255,255,0.08);
+font-family: ‘Playfair Display’, serif;
+font-size: 52px; font-weight: 300; line-height: 1; letter-spacing: -1px;
+text-shadow: 0 0 40px rgba(255,255,255,0.1);
 }
 .date-label {
-font-size: 12px; font-weight: 400; letter-spacing: 4px;
-text-transform: uppercase; opacity: 0.45; margin-top: 2px;
+font-size: 10.5px; font-weight: 600; letter-spacing: 4px;
+text-transform: uppercase; opacity: 0.4; margin-top: 2px;
 }
 
 @keyframes fadeDown {
@@ -80,9 +81,9 @@ to   { opacity:1; transform: translateY(0); }
 .card {
 background: rgba(255,255,255,0.06);
 border: 1px solid rgba(255,255,255,0.1);
-border-radius: 20px;
-padding: 14px 16px;
-margin-bottom: 12px;
+border-radius: 18px;
+padding: 11px 14px;
+margin-bottom: 8px;
 animation: fadeDown 0.8s ease both;
 opacity: 0;
 }
@@ -91,51 +92,51 @@ opacity: 0;
 .weather-card { animation-delay: 0.05s; }
 
 .weather-top { display: flex; justify-content: space-between; align-items: flex-start; }
-.weather-left { display: flex; align-items: center; gap: 12px; }
-.w-icon { font-size: 44px; line-height: 1; }
-.w-temp { font-size: 40px; font-weight: 200; line-height: 1; letter-spacing: -2px; }
-.w-temp sup { font-size: 18px; opacity: 0.65; }
+.weather-left { display: flex; align-items: center; gap: 10px; }
+.w-icon { font-size: 36px; line-height: 1; }
+.w-temp { font-family: ‘Playfair Display’, serif; font-size: 34px; font-weight: 300; line-height: 1; letter-spacing: -1px; }
+.w-temp sup { font-size: 14px; opacity: 0.65; font-family: ‘Nunito’, sans-serif; }
 .weather-right { text-align: right; }
-.w-loc { font-size: 15px; font-weight: 700; opacity: 0.9; }
-.w-desc { font-size: 12px; opacity: 0.5; margin-top: 3px; }
-.w-feels { font-size: 11px; opacity: 0.38; margin-top: 2px; }
+.w-loc { font-size: 14px; font-weight: 700; opacity: 0.9; }
+.w-desc { font-size: 11px; opacity: 0.5; margin-top: 2px; }
+.w-feels { font-size: 10px; opacity: 0.35; margin-top: 1px; }
 
-.w-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 12px 0; }
+.w-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 9px 0; }
 
 .w-stats { display: flex; justify-content: space-around; }
-.w-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-.w-stat-val { font-size: 14px; font-weight: 700; }
-.w-stat-lbl { font-size: 10px; opacity: 0.38; letter-spacing: 0.3px; }
+.w-stat { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+.w-stat-val { font-size: 13px; font-weight: 700; }
+.w-stat-lbl { font-size: 9.5px; opacity: 0.38; letter-spacing: 0.3px; }
 
-.w-loading { text-align: center; font-size: 12px; opacity: 0.35; padding: 6px 0; }
+.w-loading { text-align: center; font-size: 12px; opacity: 0.35; padding: 4px 0; }
 
-/* CLAUDE */
+/* WIDGETS */
 .claude-card { border-color: rgba(245,158,11,0.2); animation-delay: 0.12s; }
 
-.claude-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.claude-header { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
 .claude-logo {
-width: 26px; height: 26px;
+width: 22px; height: 22px;
 background: linear-gradient(135deg, #d97706, #f59e0b);
-border-radius: 8px;
+border-radius: 7px;
 display: flex; align-items: center; justify-content: center;
-font-size: 14px; flex-shrink: 0;
-box-shadow: 0 0 14px rgba(245,158,11,0.25);
+font-size: 12px; flex-shrink: 0;
+box-shadow: 0 0 12px rgba(245,158,11,0.22);
 }
-.claude-title { font-size: 11px; font-weight: 700; opacity: 0.55; letter-spacing: 1.2px; text-transform: uppercase; }
+.claude-title { font-size: 10px; font-weight: 700; opacity: 0.5; letter-spacing: 1.2px; text-transform: uppercase; }
 .claude-refresh {
 margin-left: auto; background: none; border: none; color: white;
-font-size: 16px; opacity: 0.3; cursor: pointer; padding: 4px;
+font-size: 15px; opacity: 0.3; cursor: pointer; padding: 3px;
 transition: opacity 0.2s, transform 0.4s ease;
 }
 .claude-refresh:active { opacity: 0.8; }
 .claude-refresh.spinning { transform: rotate(360deg); opacity: 0.6; }
-.claude-text { font-size: 13px; line-height: 1.65; opacity: 0.72; font-style: italic; min-height: 42px; }
+.claude-text { font-size: 12.5px; line-height: 1.55; opacity: 0.72; font-style: italic; min-height: 36px; }
 .claude-text.loading { opacity: 0.25; }
 
 /* SECTION LABEL */
 .section-label {
-font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
-text-transform: uppercase; opacity: 0.3; margin-bottom: 12px;
+font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+text-transform: uppercase; margin-bottom: 8px;
 animation: fadeDown 0.9s 0.18s ease both; opacity: 0;
 }
 
@@ -143,41 +144,41 @@ animation: fadeDown 0.9s 0.18s ease both; opacity: 0;
 .apps-grid {
 display: grid;
 grid-template-columns: repeat(4, 1fr);
-gap: 16px 6px;
+gap: 10px 6px;
 animation: fadeDown 1s 0.22s ease both;
 opacity: 0;
-margin-bottom: 16px;
+margin-bottom: 12px;
 }
 
 .app-icon {
-display: flex; flex-direction: column; align-items: center; gap: 6px;
+display: flex; flex-direction: column; align-items: center; gap: 5px;
 text-decoration: none; cursor: pointer; user-select: none;
 }
 
 .icon-body {
 width: 100%; aspect-ratio: 1;
-border-radius: 18px;
+border-radius: 16px;
 display: flex; align-items: center; justify-content: center;
 position: relative;
 transition: transform 0.1s ease;
-box-shadow: 0 6px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.22);
+box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.22);
 overflow: hidden;
 }
 
 .icon-body::before {
 content:’’; position:absolute; inset:0;
 background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 55%);
-border-radius: 18px; z-index:1;
+border-radius: 16px; z-index:1;
 }
 
 .app-icon:active .icon-body { transform: scale(0.86); }
 
-.icon-emoji { font-size: clamp(24px, 7vw, 32px); position: relative; z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
+.icon-emoji { font-size: clamp(20px, 6vw, 28px); position: relative; z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
 
 .app-name {
-color: rgba(255,255,255,0.82); font-size: 10px; font-weight: 600;
+color: rgba(255,255,255,0.8); font-size: 9.5px; font-weight: 600;
 text-align: center; text-shadow: 0 1px 4px rgba(0,0,0,0.8);
-line-height: 1.25; width: 100%;
+line-height: 1.2; width: 100%;
 }
 
 .badge {

@@ -1,211 +1,201 @@
 <!DOCTYPE html>
+
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<!-- PWA fullscreen op iPhone -->
+
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Rob's Scherm">
 <meta name="theme-color" content="#000000">
+
 <title>Rob's Beginscherm</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
 
-  :root {
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
-  }
+:root {
+–safe-top: env(safe-area-inset-top, 0px);
+–safe-bottom: env(safe-area-inset-bottom, 0px);
+}
 
-  html, body {
-    width: 100%; height: 100%;
-    overflow: hidden;
-    font-family: 'Nunito', sans-serif;
-    background: #000;
-    color: white;
-  }
+html, body {
+width: 100%; height: 100%;
+overflow: hidden;
+font-family: ‘Nunito’, sans-serif;
+background: #000;
+color: white;
+}
 
-  .screen {
-    position: fixed;
-    inset: 0;
-    background: #000;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    padding-top: calc(var(--safe-top) + 8px);
-    padding-bottom: calc(var(--safe-bottom) + 24px);
-    padding-left: 16px;
-    padding-right: 16px;
-  }
+.screen {
+position: fixed;
+inset: 0;
+background: #000;
+overflow-y: auto;
+overflow-x: hidden;
+-webkit-overflow-scrolling: touch;
+padding-top: calc(var(–safe-top) + 8px);
+padding-bottom: calc(var(–safe-bottom) + 24px);
+padding-left: 16px;
+padding-right: 16px;
+}
 
-  /* Stars */
-  .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-  .star {
-    position: absolute; border-radius: 50%; background: white;
-    animation: twinkle var(--d,3s) ease-in-out infinite; opacity: var(--op,0.4);
-  }
-  @keyframes twinkle {
-    0%,100% { opacity: var(--op,0.4); } 50% { opacity: 0.05; }
-  }
+/* Stars */
+.stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.star {
+position: absolute; border-radius: 50%; background: white;
+animation: twinkle var(–d,3s) ease-in-out infinite; opacity: var(–op,0.4);
+}
+@keyframes twinkle {
+0%,100% { opacity: var(–op,0.4); } 50% { opacity: 0.05; }
+}
 
-  .content { position: relative; z-index: 1; }
+/* All content above stars */
+.content { position: relative; z-index: 1; }
 
-  /* DATE — 7 iets lager gezet via padding-top */
-  .date-block {
-    text-align: center;
-    padding: 28px 0 18px; /* ← was 10px, nu 28px */
-    animation: fadeDown 0.7s ease both;
-  }
-  .date-day {
-    font-size: 88px; font-weight: 200; line-height: 1; letter-spacing: -5px;
-    text-shadow: 0 0 40px rgba(255,255,255,0.08);
-  }
-  .date-label {
-    font-size: 13px; font-weight: 400; letter-spacing: 4px;
-    text-transform: uppercase;
-    opacity: 0.75; /* ← was 0.45 */
-    margin-top: 2px;
-  }
+/* DATE */
+.date-block {
+text-align: center;
+padding: 10px 0 18px;
+animation: fadeDown 0.7s ease both;
+}
+.date-day {
+font-size: 88px; font-weight: 200; line-height: 1; letter-spacing: -5px;
+text-shadow: 0 0 40px rgba(255,255,255,0.08);
+}
+.date-label {
+font-size: 13px; font-weight: 400; letter-spacing: 4px;
+text-transform: uppercase; opacity: 0.45; margin-top: 2px;
+}
 
-  @keyframes fadeDown {
-    from { opacity:0; transform: translateY(-14px); }
-    to   { opacity:1; transform: translateY(0); }
-  }
+@keyframes fadeDown {
+from { opacity:0; transform: translateY(-14px); }
+to   { opacity:1; transform: translateY(0); }
+}
 
-  /* CARD base */
-  .card {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
-    padding: 14px 16px;
-    margin-bottom: 12px;
-    animation: fadeDown 0.8s ease both;
-    opacity: 0;
-  }
+/* CARD base */
+.card {
+background: rgba(255,255,255,0.06);
+border: 1px solid rgba(255,255,255,0.1);
+border-radius: 20px;
+padding: 14px 16px;
+margin-bottom: 12px;
+animation: fadeDown 0.8s ease both;
+opacity: 0;
+}
 
-  /* WEATHER */
-  .weather-card { animation-delay: 0.05s; }
+/* WEATHER */
+.weather-card { animation-delay: 0.05s; }
 
-  .weather-top { display: flex; justify-content: space-between; align-items: flex-start; }
-  .weather-left { display: flex; align-items: center; gap: 12px; }
-  .w-icon { font-size: 44px; line-height: 1; }
-  .w-temp { font-size: 40px; font-weight: 200; line-height: 1; letter-spacing: -2px; }
-  .w-temp sup { font-size: 18px; opacity: 0.8; } /* ← was 0.65 */
-  .weather-right { text-align: right; }
-  .w-loc { font-size: 15px; font-weight: 700; opacity: 1; } /* ← was 0.9 */
-  .w-desc { font-size: 12px; opacity: 0.75; margin-top: 3px; } /* ← was 0.5 */
-  .w-feels { font-size: 11px; opacity: 0.6; margin-top: 2px; } /* ← was 0.38 */
+.weather-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.weather-left { display: flex; align-items: center; gap: 12px; }
+.w-icon { font-size: 44px; line-height: 1; }
+.w-temp { font-size: 40px; font-weight: 200; line-height: 1; letter-spacing: -2px; }
+.w-temp sup { font-size: 18px; opacity: 0.65; }
+.weather-right { text-align: right; }
+.w-loc { font-size: 15px; font-weight: 700; opacity: 0.9; }
+.w-desc { font-size: 12px; opacity: 0.5; margin-top: 3px; }
+.w-feels { font-size: 11px; opacity: 0.38; margin-top: 2px; }
 
-  .w-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 12px 0; }
+.w-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 12px 0; }
 
-  .w-stats { display: flex; justify-content: space-around; }
-  .w-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-  .w-stat-val { font-size: 14px; font-weight: 700; }
-  .w-stat-lbl { font-size: 10px; opacity: 0.65; letter-spacing: 0.3px; } /* ← was 0.38 */
+.w-stats { display: flex; justify-content: space-around; }
+.w-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.w-stat-val { font-size: 14px; font-weight: 700; }
+.w-stat-lbl { font-size: 10px; opacity: 0.38; letter-spacing: 0.3px; }
 
-  .w-loading { text-align: center; font-size: 12px; opacity: 0.6; padding: 6px 0; } /* ← was 0.35 */
+.w-loading { text-align: center; font-size: 12px; opacity: 0.35; padding: 6px 0; }
 
-  /* NIEUWS */
-  .news-card { border-color: rgba(99,179,237,0.2); animation-delay: 0.12s; }
-  .news-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-  .news-logo {
-    width: 26px; height: 26px;
-    background: linear-gradient(135deg, #e53e3e, #fc8181);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; flex-shrink: 0;
-    box-shadow: 0 0 14px rgba(229,62,62,0.25);
-  }
-  .news-title { font-size: 11px; font-weight: 700; opacity: 0.85; letter-spacing: 1.2px; text-transform: uppercase; }
-  .news-refresh {
-    margin-left: auto; background: none; border: none; color: white;
-    font-size: 16px; opacity: 0.55; cursor: pointer; padding: 4px;
-    transition: opacity 0.2s, transform 0.4s ease;
-  }
-  .news-refresh:active { opacity: 0.8; }
-  .news-refresh.spinning { transform: rotate(360deg); opacity: 0.6; }
-  .news-item {
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    cursor: pointer;
-  }
-  .news-item:last-child { border-bottom: none; padding-bottom: 0; }
-  .news-item:first-child { padding-top: 0; }
-  .news-item-title {
-    font-size: 13px; font-weight: 600; line-height: 1.4;
-    opacity: 0.92; margin-bottom: 3px;
-  }
-  .news-item-meta {
-    font-size: 10px; opacity: 0.45; display: flex; gap: 8px;
-  }
-  .news-loading { font-size: 12px; opacity: 0.4; text-align: center; padding: 10px 0; }
+/* CLAUDE */
+.claude-card { border-color: rgba(245,158,11,0.2); animation-delay: 0.12s; }
 
-  /* SECTION LABEL */
-  .section-label {
-    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
-    text-transform: uppercase;
-    opacity: 0.6; /* ← was 0.3 */
-    margin-bottom: 12px;
-    animation: fadeDown 0.9s 0.18s ease both;
-  }
+.claude-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.claude-logo {
+width: 26px; height: 26px;
+background: linear-gradient(135deg, #d97706, #f59e0b);
+border-radius: 8px;
+display: flex; align-items: center; justify-content: center;
+font-size: 14px; flex-shrink: 0;
+box-shadow: 0 0 14px rgba(245,158,11,0.25);
+}
+.claude-title { font-size: 11px; font-weight: 700; opacity: 0.55; letter-spacing: 1.2px; text-transform: uppercase; }
+.claude-refresh {
+margin-left: auto; background: none; border: none; color: white;
+font-size: 16px; opacity: 0.3; cursor: pointer; padding: 4px;
+transition: opacity 0.2s, transform 0.4s ease;
+}
+.claude-refresh:active { opacity: 0.8; }
+.claude-refresh.spinning { transform: rotate(360deg); opacity: 0.6; }
+.claude-text { font-size: 13px; line-height: 1.65; opacity: 0.72; font-style: italic; min-height: 42px; }
+.claude-text.loading { opacity: 0.25; }
 
-  /* APPS GRID */
-  .apps-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px 6px;
-    animation: fadeDown 1s 0.22s ease both;
-    opacity: 0;
-    margin-bottom: 16px;
-  }
+/* SECTION LABEL */
+.section-label {
+font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+text-transform: uppercase; opacity: 0.3; margin-bottom: 12px;
+animation: fadeDown 0.9s 0.18s ease both; opacity: 0;
+}
 
-  .app-icon {
-    display: flex; flex-direction: column; align-items: center; gap: 6px;
-    text-decoration: none; cursor: pointer; user-select: none;
-  }
+/* APPS GRID */
+.apps-grid {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 16px 6px;
+animation: fadeDown 1s 0.22s ease both;
+opacity: 0;
+margin-bottom: 16px;
+}
 
-  .icon-body {
-    width: 100%; aspect-ratio: 1;
-    border-radius: 18px;
-    display: flex; align-items: center; justify-content: center;
-    position: relative;
-    transition: transform 0.1s ease;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.22);
-    overflow: hidden;
-  }
+.app-icon {
+display: flex; flex-direction: column; align-items: center; gap: 6px;
+text-decoration: none; cursor: pointer; user-select: none;
+}
 
-  .icon-body::before {
-    content:''; position:absolute; inset:0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 55%);
-    border-radius: 18px; z-index:1;
-  }
+.icon-body {
+width: 100%; aspect-ratio: 1;
+border-radius: 18px;
+display: flex; align-items: center; justify-content: center;
+position: relative;
+transition: transform 0.1s ease;
+box-shadow: 0 6px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.22);
+overflow: hidden;
+}
 
-  .app-icon:active .icon-body { transform: scale(0.86); }
+.icon-body::before {
+content:’’; position:absolute; inset:0;
+background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 55%);
+border-radius: 18px; z-index:1;
+}
 
-  .icon-emoji { font-size: clamp(24px, 7vw, 32px); position: relative; z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
+.app-icon:active .icon-body { transform: scale(0.86); }
 
-  .app-name {
-    color: rgba(255,255,255,0.95); /* ← was 0.82 */
-    font-size: 10px; font-weight: 700; /* ← was 600 */
-    text-align: center; text-shadow: 0 1px 4px rgba(0,0,0,0.8);
-    line-height: 1.25; width: 100%;
-  }
+.icon-emoji { font-size: clamp(24px, 7vw, 32px); position: relative; z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
 
-  .badge {
-    position: absolute; top: -5px; right: -5px;
-    width: 17px; height: 17px; background: #ef4444;
-    border-radius: 50%; border: 2px solid #000;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 8px; font-weight: 800; color: white; z-index: 4;
-  }
+.app-name {
+color: rgba(255,255,255,0.82); font-size: 10px; font-weight: 600;
+text-align: center; text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+line-height: 1.25; width: 100%;
+}
 
-  .ic-agenda  { background: linear-gradient(145deg, #7c3aed, #a855f7, #6d28d9); }
-  .ic-finance { background: linear-gradient(145deg, #059669, #10b981, #047857); }
-  .ic-med     { background: linear-gradient(145deg, #dc2626, #f87171, #b91c1c); }
-  .ic-crypto  { background: linear-gradient(145deg, #d97706, #f59e0b, #b45309); }
-  .ic-auto    { background: linear-gradient(145deg, #2563eb, #60a5fa, #1d4ed8); }
-  .ic-nood    { background: linear-gradient(145deg, #ea580c, #fb923c, #c2410c); }
-  .ic-sigbenz { background: linear-gradient(145deg, #475569, #94a3b8, #334155); }
+.badge {
+position: absolute; top: -5px; right: -5px;
+width: 17px; height: 17px; background: #ef4444;
+border-radius: 50%; border: 2px solid #000;
+display: flex; align-items: center; justify-content: center;
+font-size: 8px; font-weight: 800; color: white; z-index: 4;
+}
+
+.ic-agenda  { background: linear-gradient(145deg, #7c3aed, #a855f7, #6d28d9); }
+.ic-finance { background: linear-gradient(145deg, #059669, #10b981, #047857); }
+.ic-med     { background: linear-gradient(145deg, #dc2626, #f87171, #b91c1c); }
+.ic-crypto  { background: linear-gradient(145deg, #d97706, #f59e0b, #b45309); }
+.ic-auto    { background: linear-gradient(145deg, #2563eb, #60a5fa, #1d4ed8); }
+.ic-nood    { background: linear-gradient(145deg, #ea580c, #fb923c, #c2410c); }
+.ic-sigbenz { background: linear-gradient(145deg, #475569, #94a3b8, #334155); }
+
 </style>
 </head>
 <body>
@@ -215,101 +205,104 @@
 <div class="screen">
   <div class="content">
 
-    <!-- Date -->
-    <div class="date-block">
-      <div class="date-day" id="dateDay">7</div>
-      <div class="date-label" id="dateLabel">Zaterdag · Maart</div>
-    </div>
+```
+<!-- Date -->
+<div class="date-block">
+  <div class="date-day" id="dateDay">7</div>
+  <div class="date-label" id="dateLabel">Zaterdag · Maart</div>
+</div>
 
-    <!-- Weather -->
-    <div class="card weather-card">
-      <div id="wLoading" class="w-loading">Weer laden voor Leende…</div>
-      <div id="wContent" style="display:none">
-        <div class="weather-top">
-          <div class="weather-left">
-            <div class="w-icon" id="wIcon">🌤️</div>
-            <div class="w-temp" id="wTemp">–<sup>°C</sup></div>
-          </div>
-          <div class="weather-right">
-            <div class="w-loc">Leende</div>
-            <div class="w-desc" id="wDesc">–</div>
-            <div class="w-feels" id="wFeels">–</div>
-          </div>
-        </div>
-        <div class="w-divider"></div>
-        <div class="w-stats">
-          <div class="w-stat"><span class="w-stat-val" id="wWind">–</span><span class="w-stat-lbl">💨 Wind</span></div>
-          <div class="w-stat"><span class="w-stat-val" id="wHum">–</span><span class="w-stat-lbl">💧 Vochtigheid</span></div>
-          <div class="w-stat"><span class="w-stat-val" id="wRain">–</span><span class="w-stat-lbl">🌧 Neerslag</span></div>
-          <div class="w-stat"><span class="w-stat-val" id="wUV">–</span><span class="w-stat-lbl">☀️ UV-index</span></div>
-        </div>
+<!-- Weather -->
+<div class="card weather-card">
+  <div id="wLoading" class="w-loading">Weer laden voor Leende…</div>
+  <div id="wContent" style="display:none">
+    <div class="weather-top">
+      <div class="weather-left">
+        <div class="w-icon" id="wIcon">🌤️</div>
+        <div class="w-temp" id="wTemp">–<sup>°C</sup></div>
+      </div>
+      <div class="weather-right">
+        <div class="w-loc">Leende</div>
+        <div class="w-desc" id="wDesc">–</div>
+        <div class="w-feels" id="wFeels">–</div>
       </div>
     </div>
-
-    <!-- Nieuws widget -->
-    <div class="card news-card">
-      <div class="news-header">
-        <div class="news-logo">📰</div>
-        <span class="news-title">Laatste nieuws</span>
-        <button class="news-refresh" id="newsRefresh">↻</button>
-      </div>
-      <div id="newsContent"><div class="news-loading">Nieuws laden…</div></div>
+    <div class="w-divider"></div>
+    <div class="w-stats">
+      <div class="w-stat"><span class="w-stat-val" id="wWind">–</span><span class="w-stat-lbl">💨 Wind</span></div>
+      <div class="w-stat"><span class="w-stat-val" id="wHum">–</span><span class="w-stat-lbl">💧 Vochtigheid</span></div>
+      <div class="w-stat"><span class="w-stat-val" id="wRain">–</span><span class="w-stat-lbl">🌧 Neerslag</span></div>
+      <div class="w-stat"><span class="w-stat-val" id="wUV">–</span><span class="w-stat-lbl">☀️ UV-index</span></div>
     </div>
+  </div>
+</div>
 
-    <!-- Apps -->
-    <div class="section-label">Mijn apps</div>
+<!-- Claude widget -->
+<div class="card claude-card">
+  <div class="claude-header">
+    <div class="claude-logo">✦</div>
+    <span class="claude-title">Claude · Dagelijkse tip</span>
+    <button class="claude-refresh" id="claudeRefresh">↻</button>
+  </div>
+  <div class="claude-text loading" id="claudeText">Laden…</div>
+</div>
 
-    <div class="apps-grid">
+<!-- Apps -->
+<div class="section-label">Mijn apps</div>
 
-      <a class="app-icon" href="https://roblizet.github.io/Afspraken/" target="_blank">
-        <div class="icon-body ic-agenda">
-          <span class="icon-emoji">📅</span>
-          <div class="badge">2</div>
-        </div>
-        <span class="app-name">Onze Agenda</span>
-      </a>
+<div class="apps-grid">
 
-      <a class="app-icon" href="https://roblizet.github.io/Finance/" target="_blank">
-        <div class="icon-body ic-finance"><span class="icon-emoji">💶</span></div>
-        <span class="app-name">Financiën RL</span>
-      </a>
-
-      <a class="app-icon" href="https://roblizet.github.io/MedApp/" target="_blank">
-        <div class="icon-body ic-med"><span class="icon-emoji">💊</span></div>
-        <span class="app-name">Medapp Rob</span>
-      </a>
-
-      <a class="app-icon" href="https://roblizet.github.io/Crypto/" target="_blank">
-        <div class="icon-body ic-crypto"><span class="icon-emoji">₿</span></div>
-        <span class="app-name">Crypto</span>
-      </a>
-
-      <a class="app-icon" href="https://roblizet.github.io/Autokosten/" target="_blank">
-        <div class="icon-body ic-auto"><span class="icon-emoji">🚗</span></div>
-        <span class="app-name">Autokosten</span>
-      </a>
-
-      <a class="app-icon" href="https://roblizet.github.io/BelangrijkLizet" target="_blank">
-        <div class="icon-body ic-nood"><span class="icon-emoji">🚨</span></div>
-        <span class="app-name">Nood Info</span>
-      </a>
-
-      <a class="app-icon" href="https://roblizet.github.io/SigarettenBenzine" target="_blank">
-        <div class="icon-body ic-sigbenz"><span class="icon-emoji">⛽</span></div>
-        <span class="app-name">Sigaret & Benzine</span>
-      </a>
-
+  <a class="app-icon" href="https://roblizet.github.io/Afspraken/" target="_blank">
+    <div class="icon-body ic-agenda">
+      <span class="icon-emoji">📅</span>
+      <div class="badge">2</div>
     </div>
+    <span class="app-name">Onze Agenda</span>
+  </a>
 
-    <!-- Footer -->
-    <div style="text-align:center; padding: 20px 0 10px; animation: fadeDown 1s 0.4s ease both; opacity:0;">
-      <span style="font-size:10.5px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; opacity:0.45; background: linear-gradient(90deg, rgba(255,255,255,0.3), rgba(255,255,255,0.7), rgba(255,255,255,0.3)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Made by Rob Borghouts · 2026</span>
-    </div>
+  <a class="app-icon" href="https://roblizet.github.io/Finance/" target="_blank">
+    <div class="icon-body ic-finance"><span class="icon-emoji">💶</span></div>
+    <span class="app-name">Financiën RL</span>
+  </a>
+
+  <a class="app-icon" href="https://roblizet.github.io/MedApp/" target="_blank">
+    <div class="icon-body ic-med"><span class="icon-emoji">💊</span></div>
+    <span class="app-name">Medapp Rob</span>
+  </a>
+
+  <a class="app-icon" href="https://roblizet.github.io/Crypto/" target="_blank">
+    <div class="icon-body ic-crypto"><span class="icon-emoji">₿</span></div>
+    <span class="app-name">Crypto</span>
+  </a>
+
+  <a class="app-icon" href="https://roblizet.github.io/Autokosten/" target="_blank">
+    <div class="icon-body ic-auto"><span class="icon-emoji">🚗</span></div>
+    <span class="app-name">Autokosten</span>
+  </a>
+
+  <a class="app-icon" href="https://roblizet.github.io/BelangrijkLizet" target="_blank">
+    <div class="icon-body ic-nood"><span class="icon-emoji">🚨</span></div>
+    <span class="app-name">Nood Info</span>
+  </a>
+
+  <a class="app-icon" href="https://roblizet.github.io/SigarettenBenzine" target="_blank">
+    <div class="icon-body ic-sigbenz"><span class="icon-emoji">⛽</span></div>
+    <span class="app-name">Sigaret & Benzine</span>
+  </a>
+
+</div>
+
+<!-- Footer -->
+<div style="text-align:center; padding: 20px 0 10px; animation: fadeDown 1s 0.4s ease both; opacity:0;">
+  <span style="font-size:10.5px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; opacity:0.25; background: linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.45), rgba(255,255,255,0.15)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Made by Rob Borghouts · 2026</span>
+</div>
+```
 
   </div><!-- /content -->
 </div><!-- /screen -->
 
 <script>
+// CLOCK in status bar not needed (iOS shows its own)
 // DATE
 const days   = ['Zondag','Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag','Zaterdag'];
 const months = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
@@ -352,48 +345,51 @@ async function loadWeather() {
 }
 loadWeather();
 
-// NIEUWS WIDGET
-const RSS_FEEDS = [
-  'https://feeds.nos.nl/nosnieuwsalgemeen',
-  'https://www.nu.nl/rss/algemeen',
+// CLAUDE WIDGET
+const TOPICS = [
+  'Geef een korte motivatietip voor een magazijnbeheerder die hobby-apps bouwt. Max 2 zinnen. In het Nederlands.',
+  'Geef een kort interessant weetje over cryptocurrency of Bitcoin. Max 2 zinnen. In het Nederlands.',
+  'Geef een slimme tip voor iemand die PWA-webapps bouwt met GitHub Pages. Max 2 zinnen. In het Nederlands.',
+  'Geef een inspirerende spreuk voor een nieuwe dag. Max 2 zinnen. In het Nederlands.',
+  'Geef een tip om energie te sparen op een werkdag in het magazijn. Max 2 zinnen. In het Nederlands.',
+  'Geef een interessant feit over progressive rock muziek of de band Marillion. Max 2 zinnen. In het Nederlands.',
+  'Geef een tip over gezond leven voor iemand die een CPAP machine gebruikt. Max 2 zinnen. In het Nederlands.',
 ];
-const CORS = 'https://api.rss2json.com/v1/api.json?rss_url=';
 
-async function loadNews() {
-  const container = document.getElementById('newsContent');
-  const btn = document.getElementById('newsRefresh');
+let tipIdx = Math.floor(Math.random() * TOPICS.length);
+
+async function loadClaude() {
+  const el  = document.getElementById('claudeText');
+  const btn = document.getElementById('claudeRefresh');
+  el.classList.add('loading');
+  el.textContent = 'Even nadenken…';
   btn.classList.add('spinning');
-  container.innerHTML = '<div class="news-loading">Nieuws laden…</div>';
-
-  // Probeer feeds om beurten
-  const feed = RSS_FEEDS[Math.floor(Math.random() * RSS_FEEDS.length)];
   try {
-    const res = await fetch(CORS + encodeURIComponent(feed));
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: TOPICS[tipIdx % TOPICS.length] }]
+      })
+    });
     const data = await res.json();
-    const items = (data.items || []).slice(0, 1);
-    if (!items.length) throw new Error('Geen items');
-
-    container.innerHTML = items.map(item => {
-      const datum = item.pubDate ? new Date(item.pubDate) : null;
-      const tijdStr = datum ? datum.toLocaleTimeString('nl-NL', {hour:'2-digit', minute:'2-digit'}) : '';
-      const bronStr = item.author || data.feed?.title || '';
-      return `<div class="news-item" onclick="window.open('${item.link}','_blank')">
-        <div class="news-item-title">${item.title}</div>
-        <div class="news-item-meta">
-          ${tijdStr ? '<span>' + tijdStr + '</span>' : ''}
-          ${bronStr ? '<span>' + bronStr + '</span>' : ''}
-        </div>
-      </div>`;
-    }).join('');
+    el.textContent = data.content?.find(b => b.type === 'text')?.text || '–';
+    tipIdx++;
   } catch(e) {
-    container.innerHTML = '<div class="news-loading">Nieuws niet beschikbaar</div>';
+    el.textContent = 'Kon Claude niet bereiken. Probeer later opnieuw.';
   }
+  el.classList.remove('loading');
   btn.classList.remove('spinning');
-  btn.style.transition = 'none'; btn.offsetHeight; btn.style.transition = '';
+  // reset animation
+  btn.style.transition = 'none';
+  btn.offsetHeight;
+  btn.style.transition = '';
 }
 
-loadNews();
-document.getElementById('newsRefresh').addEventListener('click', loadNews);
+loadClaude();
+document.getElementById('claudeRefresh').addEventListener('click', loadClaude);
 </script>
 
 </body>

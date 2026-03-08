@@ -37,7 +37,7 @@ background: #000;
 overflow-y: auto;
 overflow-x: hidden;
 -webkit-overflow-scrolling: touch;
-padding-top: calc(var(–safe-top) + 4px);
+padding-top: calc(var(–safe-top) + 18px);
 padding-bottom: calc(var(–safe-bottom) + 12px);
 padding-left: 14px;
 padding-right: 14px;
@@ -393,26 +393,33 @@ function loadQuote() {
 loadQuote();
 document.getElementById('quoteRefresh').addEventListener('click', loadQuote);
 
-// NIEUWS (NOS — nieuwste bericht bovenaan)
+// NIEUWS — NOS RSS via CORS proxy
 async function loadNieuws() {
   const el   = document.getElementById('nieuwsText');
   const meta = document.getElementById('nieuwsMeta');
   const btn  = document.getElementById('nieuwsRefresh');
   btn.classList.add('spinning');
   try {
-    const url = 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ffeeds.nos.nl%2Fnosnieuwsalgemeen&count=1';
-    const d = await (await fetch(url)).json();
-    const item = d.items?.[0];
+    const proxy = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://feeds.nos.nl/nosnieuwsalgemeen');
+    const res = await fetch(proxy);
+    const data = await res.json();
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(data.contents, 'text/xml');
+    const item = xml.querySelector('item');
     if (!item) throw new Error();
-    el.textContent = item.title;
-    const pub = new Date(item.pubDate);
+    const title = item.querySelector('title')?.textContent || '';
+    const link  = item.querySelector('link')?.textContent || '';
+    const pubDate = item.querySelector('pubDate')?.textContent || '';
+    el.textContent = title;
+    const pub = new Date(pubDate);
     const h = String(pub.getHours()).padStart(2,'0');
     const m = String(pub.getMinutes()).padStart(2,'0');
     meta.textContent = h + ':' + m + '  ·  NOS Nieuws';
     el.style.cursor = 'pointer';
-    el.onclick = () => window.open(item.link, '_blank');
+    el.onclick = () => window.open(link, '_blank');
   } catch(e) {
-    el.textContent = 'Nieuws niet beschikbaar';
+    el.textContent = 'Nieuws tijdelijk niet beschikbaar';
+    meta.textContent = '';
   }
   btn.classList.remove('spinning');
   btn.style.transition='none'; btn.offsetHeight; btn.style.transition='';
